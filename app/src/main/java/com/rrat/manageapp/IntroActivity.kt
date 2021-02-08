@@ -1,10 +1,12 @@
 package com.rrat.manageapp
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.rrat.manageapp.databinding.ActivityIntroBinding
@@ -36,5 +38,15 @@ class IntroActivity : AppCompatActivity() {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
+    }
+
+    fun onSignIn(view: View) {
+        intent = Intent(this, SignInActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun onSignUp(view: View) {
+        intent = Intent(this, SignUpActivity::class.java)
+        startActivity(intent)
     }
 }
