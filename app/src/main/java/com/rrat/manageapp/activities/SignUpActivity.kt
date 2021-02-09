@@ -1,38 +1,41 @@
-package com.rrat.manageapp
+package com.rrat.manageapp.activities
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
-import com.rrat.manageapp.databinding.ActivitySignInBinding
+import com.rrat.manageapp.R
+import com.rrat.manageapp.databinding.ActivitySignUpBinding
 
-class SignInActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySignInBinding
+    private lateinit var binding: ActivitySignUpBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignInBinding.inflate(layoutInflater)
+
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setWindowFullScreen()
         setupActionBar()
+
     }
 
     private fun setupActionBar(){
-        setSupportActionBar(binding.toolbarSignInActivity)
+        setSupportActionBar(binding.toolbarSignUpActivity)
         val actionBar = supportActionBar
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setHomeAsUpIndicator(R.drawable.ic_black_color_back_24dp)
         }
 
-        binding.toolbarSignInActivity.setNavigationOnClickListener {
+        binding.toolbarSignUpActivity.setNavigationOnClickListener {
             onBackPressed()
         }
     }
-
+    
     private fun setWindowFullScreen(){
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

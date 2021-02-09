@@ -1,4 +1,4 @@
-package com.rrat.manageapp
+package com.rrat.manageapp.activities
 
 import android.content.Intent
 import android.graphics.Typeface

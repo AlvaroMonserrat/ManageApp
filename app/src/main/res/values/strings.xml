@@ -14,5 +14,6 @@
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="sign_in">SIGN IN</string>
+    <string name="please_wait">please wait</string>
     <!--END-->
 </resources>

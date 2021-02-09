@@ -1,17 +1,15 @@
-package com.rrat.manageapp
+package com.rrat.manageapp.activities
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.rrat.manageapp.databinding.ActivityIntroBinding
 
-class IntroActivity : AppCompatActivity() {
+class IntroActivity : BaseActivity() {
 
     private lateinit var binding: ActivityIntroBinding
 
@@ -24,20 +22,6 @@ class IntroActivity : AppCompatActivity() {
         setWindowFullScreen()
 
 
-
-
-    }
-
-    private fun setWindowFullScreen(){
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
     }
 
     fun onSignIn(view: View) {
