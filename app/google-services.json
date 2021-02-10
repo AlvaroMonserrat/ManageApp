@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "522733946630",
+    "project_id": "managerapp-ce54b",
+    "storage_bucket": "managerapp-ce54b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522733946630:android:d9383704c643d7c2660087",
+        "android_client_info": {
+          "package_name": "com.rrat.manageapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522733946630-0p22ijlib0rp515thq6nu8pae3rjfg91.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOck7JnHvp4_eVFm-J8cYKYWduMc_rnvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522733946630-0p22ijlib0rp515thq6nu8pae3rjfg91.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
