@@ -8,8 +8,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ManageApp">
-        <activity android:name=".activities.BaseActivity"></activity>
+        android:theme="@style/AppTheme">
+        <activity android:name=".activities.BaseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".activities.SignInActivity"
             android:screenOrientation="portrait"
