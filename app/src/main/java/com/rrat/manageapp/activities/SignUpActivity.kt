@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.rrat.manageapp.R
 import com.rrat.manageapp.databinding.ActivitySignUpBinding
+import com.rrat.manageapp.firebase.FireStoreClass
+import com.rrat.manageapp.models.User
 
 class SignUpActivity : BaseActivity() {
 
@@ -27,6 +29,16 @@ class SignUpActivity : BaseActivity() {
 
     }
 
+    fun userRegisterSuccess(){
+        Toast.makeText(this, "You have" +
+                "succesfully registered ",
+            Toast.LENGTH_LONG)
+            .show()
+        hideProgressDialog()
+        FirebaseAuth.getInstance().signOut()
+        finish()
+    }
+
     private fun registerUser(){
         val name: String = binding.etName.text.toString().trim{ it <= ' ' }
         val email: String = binding.etEmail.text.toString().trim{ it <= ' ' }
@@ -38,17 +50,13 @@ class SignUpActivity : BaseActivity() {
                     .createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
                         task ->
-                        hideProgressDialog()
                         if(task.isSuccessful){
                             val firebaseUser : FirebaseUser = task.result!!.user!!
                             val registeredEmail = firebaseUser.email!!
-                            Toast.makeText(this, "$name you " +
-                                            "succesfully registered " +
-                                            "the email address $registeredEmail",
-                                    Toast.LENGTH_LONG)
-                                    .show()
-                            FirebaseAuth.getInstance().signOut()
-                            finish()
+                            val user = User(firebaseUser.uid, name, registeredEmail)
+
+                            FireStoreClass().registerUser(this, user)
+
                         }else{
                             Toast.makeText(this, task.exception!!.message,
                                     Toast.LENGTH_SHORT)
