@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.rrat.manageapp.R
 import com.rrat.manageapp.databinding.ActivitySignInBinding
+import com.rrat.manageapp.firebase.FireStoreClass
+import com.rrat.manageapp.models.User
 
 class SignInActivity : BaseActivity() {
 
@@ -52,20 +54,12 @@ class SignInActivity : BaseActivity() {
 
         if(validateForm(email, password)){
             showProgressDialog(resources.getString(R.string.please_wait))
-            FirebaseAuth.getInstance()
-                    .signInWithEmailAndPassword(email, password)
+            auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
                         task ->
                         hideProgressDialog()
                         if(task.isSuccessful){
-                            val firebaseUser : FirebaseUser = task.result!!.user!!
-                            val registeredEmail = firebaseUser.email!!
-                            Toast.makeText(this, "You " +
-                                    "succesfully Sign In " +
-                                    "the email address $registeredEmail",
-                                    Toast.LENGTH_LONG)
-                                    .show()
-                            startActivity(Intent(this, MainActivity::class.java))
+                            FireStoreClass().signInUser(this)
                         }else{
                             Toast.makeText(this, "Authentication failed.",
                                     Toast.LENGTH_SHORT)
@@ -74,6 +68,12 @@ class SignInActivity : BaseActivity() {
                     }
 
         }
+    }
+
+    fun signInSuccess(user: User){
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun validateForm(email: String, password: String): Boolean{
