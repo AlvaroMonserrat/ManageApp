@@ -10,6 +10,7 @@ import android.os.Looper
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.rrat.manageapp.databinding.ActivitySplashBinding
+import com.rrat.manageapp.firebase.FireStoreClass
 
 class SplashActivity : AppCompatActivity() {
 
@@ -26,7 +27,13 @@ class SplashActivity : AppCompatActivity() {
         binding.textViewAppName.typeface = typeFace
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, IntroActivity::class.java))
+
+            val currentUserID = FireStoreClass().getCurrentUserId()
+            if(currentUserID.isNotEmpty()){
+                startActivity(Intent(this, MainActivity::class.java))
+            }else{
+                startActivity(Intent(this, IntroActivity::class.java))
+            }
             finish()
         }, 2500)
 

@@ -21,7 +21,6 @@ class IntroActivity : BaseActivity() {
 
         setWindowFullScreen()
 
-
     }
 
     fun onSignIn(view: View) {
