@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 
     testImplementation 'junit:junit:4.13.2'

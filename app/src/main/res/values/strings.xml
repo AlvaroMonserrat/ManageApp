@@ -15,5 +15,8 @@
     <string name="email">Email</string>
     <string name="sign_in">SIGN IN</string>
     <string name="please_wait">please wait</string>
+    <string name="imageprofile">imageProfile</string>
+    <string name="my_profile">My Profile</string>
+    <string name="sign_out">Sign Out</string>
     <!--END-->
 </resources>
