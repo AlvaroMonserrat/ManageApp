@@ -1,15 +1,10 @@
 package com.rrat.manageapp.activities
 
 import android.content.Intent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.rrat.manageapp.R
 import com.rrat.manageapp.databinding.ActivitySignInBinding
 import com.rrat.manageapp.firebase.FireStoreClass
@@ -59,7 +54,7 @@ class SignInActivity : BaseActivity() {
                         task ->
                         hideProgressDialog()
                         if(task.isSuccessful){
-                            FireStoreClass().signInUser(this)
+                            FireStoreClass().loadUserData(this)
                         }else{
                             Toast.makeText(this, "Authentication failed.",
                                     Toast.LENGTH_SHORT)

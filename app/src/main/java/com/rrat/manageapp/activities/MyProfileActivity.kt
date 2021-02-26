@@ -1,8 +1,11 @@
 package com.rrat.manageapp.activities
 
 import android.os.Bundle
+import com.bumptech.glide.Glide
 import com.rrat.manageapp.R
 import com.rrat.manageapp.databinding.ActivityMyProfileBinding
+import com.rrat.manageapp.firebase.FireStoreClass
+import com.rrat.manageapp.models.User
 
 class MyProfileActivity : BaseActivity() {
 
@@ -16,6 +19,8 @@ class MyProfileActivity : BaseActivity() {
         setContentView(binding.root)
 
         setupActionBar()
+
+        FireStoreClass().loadUserData(this)
     }
 
 
@@ -34,5 +39,20 @@ class MyProfileActivity : BaseActivity() {
 
         toolBar.setNavigationOnClickListener {  onBackPressed() }
 
+    }
+
+    fun setUserDataInUT(user: User){
+        Glide
+                .with(this)
+                .load(user.image)
+                .centerCrop()
+                .placeholder(R.drawable.ic_user_place_holder)
+                .into(binding.ivUserImage)
+
+        binding.etName.setText(user.name)
+        binding.etEmail.setText(user.email)
+        if(user.mobile != 0L){
+            binding.etPhone.setText(user.mobile.toString())
+        }
     }
 }

@@ -5,10 +5,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.rrat.manageapp.activities.BaseActivity
-import com.rrat.manageapp.activities.MainActivity
-import com.rrat.manageapp.activities.SignInActivity
-import com.rrat.manageapp.activities.SignUpActivity
+import com.rrat.manageapp.activities.*
 import com.rrat.manageapp.models.User
 import com.rrat.manageapp.utils.Constants
 
@@ -37,7 +34,7 @@ class FireStoreClass {
         return currentUserId
     }
 
-    fun signInUser(activity: Activity){
+    fun loadUserData(activity: Activity){
         mFireStore.collection(Constants.USERS)
                 .document(getCurrentUserId())
                 .get()
@@ -50,6 +47,9 @@ class FireStoreClass {
                             }
                             is MainActivity->{
                                 activity.updateNavigationUserDetails(loggedInUser)
+                            }
+                            is MyProfileActivity->{
+                                activity.setUserDataInUT(loggedInUser)
                             }
                         }
                     }

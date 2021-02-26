@@ -1,12 +1,12 @@
 package com.rrat.manageapp.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
+
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -15,8 +15,7 @@ import com.rrat.manageapp.R
 import com.rrat.manageapp.databinding.ActivityMainBinding
 import com.rrat.manageapp.firebase.FireStoreClass
 import com.rrat.manageapp.models.User
-import org.w3c.dom.Text
-import kotlin.math.log
+
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,7 +32,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        FireStoreClass().signInUser(this)
+        FireStoreClass().loadUserData(this)
 
     }
 
@@ -88,12 +87,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     fun updateNavigationUserDetails(user: User) {
         Glide
-                .with(this)
-                .load(user.image)
-                .centerCrop()
-                .placeholder(R.drawable.ic_user_place_holder)
-                .into(binding.drawerLayout.findViewById(R.id.nave_user_image));
+            .with(this)
+            .load(user.image)
+            .centerCrop()
+            .placeholder(R.drawable.ic_user_place_holder)
+            .into(binding.drawerLayout.findViewById(R.id.nave_user_image))
 
         binding.drawerLayout.findViewById<TextView>(R.id.tv_username).text = user.name
     }
+
+
 }
