@@ -6,12 +6,16 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.rrat.manageapp.R
 import com.rrat.manageapp.databinding.ActivityMyProfileBinding
 import com.rrat.manageapp.firebase.FireStoreClass
@@ -29,6 +33,7 @@ class MyProfileActivity : BaseActivity() {
     }
 
     private var mSelectedImageFileUri: Uri? = null
+    private var mProfileImageURL : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +45,12 @@ class MyProfileActivity : BaseActivity() {
         setupActionBar()
 
         FireStoreClass().loadUserData(this)
+
+        binding.btnUpdate.setOnClickListener {
+            if (mSelectedImageFileUri != null){
+                uploadUserImage()
+            }
+        }
     }
 
 
@@ -133,8 +144,44 @@ class MyProfileActivity : BaseActivity() {
         }
     }
 
-    private fun getFileExtension(uri: Uri){
-        
+    private fun uploadUserImage(){
+        showProgressDialog(resources.getString(R.string.please_wait))
+
+        if(mSelectedImageFileUri != null){
+            val sRef : StorageReference = FirebaseStorage.getInstance()
+                    .reference
+                    .child("USER_IMAGE"
+                            + System.currentTimeMillis()
+                            + "."
+                            + getFileExtension(mSelectedImageFileUri!!))
+
+            sRef.putFile(mSelectedImageFileUri!!).addOnSuccessListener {
+                taskSnapshot ->
+                Log.i("Firebase Image URL",
+                    taskSnapshot.metadata!!.reference!!.downloadUrl.toString())
+
+                taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener {
+                    uri->
+                    Log.i("Downloadable Image URL",
+                            uri.toString())
+                    mProfileImageURL = uri.toString()
+
+                    //TODO UpdateUserProfileData
+                    hideProgressDialog()
+
+
+                }.addOnFailureListener {
+                    exception ->
+                    Snackbar.make(binding.root, exception.message.toString(), Snackbar.LENGTH_SHORT).show()
+                    hideProgressDialog()
+                }
+            }
+        }
+
+    }
+
+    private fun getFileExtension(uri: Uri): String?{
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(contentResolver.getType(uri))
     }
 
 
