@@ -45,9 +45,10 @@
                     android:padding="@dimen/card_view_layout_content_padding">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/iv_user_image"
+                        android:id="@+id/iv_profile_image"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:onClick="onChangeImage"
                         android:src="@drawable/ic_user_place_holder"
                         />
 

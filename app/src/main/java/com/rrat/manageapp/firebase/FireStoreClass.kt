@@ -55,8 +55,6 @@ class FireStoreClass {
                     }
 
 
-
-
                 }.addOnFailureListener {
                     e->
                     when(activity){
