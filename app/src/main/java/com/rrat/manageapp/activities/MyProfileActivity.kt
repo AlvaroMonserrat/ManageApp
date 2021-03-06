@@ -100,7 +100,7 @@ class MyProfileActivity : BaseActivity() {
                         android.Manifest.permission.READ_EXTERNAL_STORAGE)
             == PackageManager.PERMISSION_GRANTED){
 
-            showImageChooser()
+            Constants.showImageChooser(this)
 
         }else{
             ActivityCompat.requestPermissions(
@@ -117,18 +117,11 @@ class MyProfileActivity : BaseActivity() {
             if(grantResults.isNotEmpty()
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED){
 
-                showImageChooser()
+                Constants.showImageChooser(this)
             }else{
                 Snackbar.make(binding.root, "Oops, you just denied the permission for storage", Snackbar.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun showImageChooser(){
-        var galleryIntent = Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-
-        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -219,6 +212,7 @@ class MyProfileActivity : BaseActivity() {
 
     fun profileUpdateSuccess(){
         hideProgressDialog()
+        setResult(Activity.RESULT_OK)
         finish()
     }
 

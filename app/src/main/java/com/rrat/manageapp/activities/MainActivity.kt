@@ -1,9 +1,12 @@
 package com.rrat.manageapp.activities
 
+import android.app.Activity
 import android.content.Intent
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 
@@ -20,6 +23,10 @@ import com.rrat.manageapp.models.User
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
+
+    companion object{
+        const val MY_PROFILE_REQUEST_CODE : Int = 11
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,10 +72,21 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && requestCode == MY_PROFILE_REQUEST_CODE){
+            FireStoreClass().loadUserData(this)
+        }else{
+            Log.e("Cancelled", "Cancelled")
+        }
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.nav_my_profile ->{
-                startActivity(Intent(this, MyProfileActivity::class.java))
+                startActivityForResult(Intent(this,
+                        MyProfileActivity::class.java),
+                        MY_PROFILE_REQUEST_CODE)
             }
             R.id.nav_sign_out->{
                 Toast.makeText(this, "My Sign Out", Toast.LENGTH_SHORT).show()
@@ -94,6 +112,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .into(binding.drawerLayout.findViewById(R.id.nave_user_image))
 
         binding.drawerLayout.findViewById<TextView>(R.id.tv_username).text = user.name
+    }
+
+    fun onAddBoard(view: View) {
+        startActivity(Intent(this, CreateBoardActivity::class.java))
     }
 
 

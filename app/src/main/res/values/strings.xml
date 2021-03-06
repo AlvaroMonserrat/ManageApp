@@ -16,9 +16,13 @@
     <string name="sign_in">SIGN IN</string>
     <string name="please_wait">please wait</string>
     <string name="imageprofile">imageProfile</string>
+
     <string name="my_profile">My Profile</string>
+    <string name="my_create">Create Board</string>
+
     <string name="sign_out">Sign Out</string>
     <string name="update">UPDATE</string>
     <string name="mobile">Mobile</string>
+    <string name="addbutton">addButton</string>
     <!--END-->
 </resources>
