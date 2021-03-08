@@ -24,5 +24,6 @@
     <string name="update">UPDATE</string>
     <string name="mobile">Mobile</string>
     <string name="addbutton">addButton</string>
+    <string name="no_boards_are_available">No Boards are available!!</string>
     <!--END-->
 </resources>

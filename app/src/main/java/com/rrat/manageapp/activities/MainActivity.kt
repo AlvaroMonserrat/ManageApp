@@ -7,25 +7,32 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.rrat.manageapp.R
+import com.rrat.manageapp.adapters.BoardItemsAdapter
 import com.rrat.manageapp.databinding.ActivityMainBinding
 import com.rrat.manageapp.firebase.FireStoreClass
+import com.rrat.manageapp.models.Board
 import com.rrat.manageapp.models.User
+import com.rrat.manageapp.utils.Constants
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var  mUserName: String
 
     companion object{
         const val MY_PROFILE_REQUEST_CODE : Int = 11
+        const val CREATE_BOARD_REQUEST_CODE : Int = 12
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +46,39 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        FireStoreClass().loadUserData(this)
+        FireStoreClass().loadUserData(this, true)
 
     }
+
+    fun populateBoardsListToUI(boardsList: ArrayList<Board>){
+        hideProgressDialog()
+
+        val recyclerView = binding.drawerLayout.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_boards_list)
+        val textNoBoards = binding.drawerLayout.findViewById<TextView>(R.id.tv_no_boards_available)
+
+        if(boardsList.size > 0){
+            recyclerView.visibility = View.VISIBLE
+            textNoBoards.visibility = View.GONE
+
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.setHasFixedSize(true)
+
+            val adapter = BoardItemsAdapter(this, boardsList)
+
+            recyclerView.adapter = adapter
+
+            adapter.setOnClickListener(object: BoardItemsAdapter.OnClickListener{
+                override fun onClick(position: Int, model: Board) {
+                    startActivity(Intent(this@MainActivity, TaskListActivity::class.java))
+                }
+            })
+
+        }else{
+            recyclerView.visibility = View.GONE
+            textNoBoards.visibility = View.VISIBLE
+        }
+    }
+
 
     private fun setupActionBar(){
 
@@ -76,7 +113,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && requestCode == MY_PROFILE_REQUEST_CODE){
             FireStoreClass().loadUserData(this)
-        }else{
+        }else if(resultCode == Activity.RESULT_OK && requestCode == CREATE_BOARD_REQUEST_CODE){
+            FireStoreClass().getBoardsList(this)
+        }
+        else{
             Log.e("Cancelled", "Cancelled")
         }
     }
@@ -103,7 +143,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         return true
     }
 
-    fun updateNavigationUserDetails(user: User) {
+    fun updateNavigationUserDetails(user: User, readBoardList: Boolean) {
+
+        mUserName = user.name
+
         Glide
             .with(this)
             .load(user.image)
@@ -112,10 +155,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .into(binding.drawerLayout.findViewById(R.id.nave_user_image))
 
         binding.drawerLayout.findViewById<TextView>(R.id.tv_username).text = user.name
+
+        if(readBoardList){
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FireStoreClass().getBoardsList(this)
+        }
     }
 
     fun onAddBoard(view: View) {
-        startActivity(Intent(this, CreateBoardActivity::class.java))
+        val intent = Intent(this, CreateBoardActivity::class.java)
+        intent.putExtra(Constants.NAME, mUserName)
+        startActivityForResult(intent, CREATE_BOARD_REQUEST_CODE)
     }
 
 

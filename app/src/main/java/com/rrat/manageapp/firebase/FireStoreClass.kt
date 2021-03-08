@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.rrat.manageapp.activities.*
+import com.rrat.manageapp.models.Board
 import com.rrat.manageapp.models.User
 import com.rrat.manageapp.utils.Constants
 
@@ -22,8 +23,23 @@ class FireStoreClass {
                     activity.userRegisterSuccess()
                 }.addOnFailureListener {
                     e->
+                    activity.hideProgressDialog()
                     Log.e(activity.javaClass.simpleName, "Error: {$e}")
                 }
+    }
+
+    fun createBoard(activity: CreateBoardActivity, board: Board){
+        mFireStore.collection(Constants.BOARDS)
+            .document()
+            .set(board, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.e(activity.javaClass.simpleName, "Board created successfully")
+                activity.boardCreatedSuccessfully()
+            }.addOnFailureListener {
+                    e->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error: {$e}")
+            }
     }
 
     fun getCurrentUserId(): String{
@@ -51,7 +67,7 @@ class FireStoreClass {
                 }
     }
 
-    fun loadUserData(activity: Activity){
+    fun loadUserData(activity: Activity, readBoardsList: Boolean = false){
         mFireStore.collection(Constants.USERS)
                 .document(getCurrentUserId())
                 .get()
@@ -63,7 +79,7 @@ class FireStoreClass {
                                 activity.signInSuccess(loggedInUser)
                             }
                             is MainActivity->{
-                                activity.updateNavigationUserDetails(loggedInUser)
+                                activity.updateNavigationUserDetails(loggedInUser, readBoardsList)
                             }
                             is MyProfileActivity->{
                                 activity.setUserDataInUT(loggedInUser)
@@ -83,6 +99,27 @@ class FireStoreClass {
                         }
                     }
                     Log.e(activity.javaClass.simpleName, "Error: {$e}")
+                }
+    }
+
+    fun getBoardsList(activity: MainActivity){
+        mFireStore.collection(Constants.BOARDS)
+                .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserId())
+                .get()
+                .addOnSuccessListener {
+                    document->
+                    Log.i(activity.javaClass.simpleName, document.documents.toString())
+                    val boardList: ArrayList<Board> = ArrayList()
+                    for(i in document.documents){
+                        val board = i.toObject(Board::class.java)!!
+                        board.documentId = i.id
+                        boardList.add(board)
+                    }
+
+                    activity.populateBoardsListToUI(boardList)
+                }.addOnFailureListener { e ->
+                    activity.hideProgressDialog()
+                    Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
                 }
     }
 

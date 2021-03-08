@@ -179,7 +179,7 @@ class MyProfileActivity : BaseActivity() {
                     .child("USER_IMAGE"
                             + System.currentTimeMillis()
                             + "."
-                            + getFileExtension(mSelectedImageFileUri!!))
+                            + Constants.getFileExtension(this, mSelectedImageFileUri!!))
 
             sRef.putFile(mSelectedImageFileUri!!).addOnSuccessListener {
                 taskSnapshot ->
@@ -206,9 +206,7 @@ class MyProfileActivity : BaseActivity() {
 
     }
 
-    private fun getFileExtension(uri: Uri): String?{
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(contentResolver.getType(uri))
-    }
+
 
     fun profileUpdateSuccess(){
         hideProgressDialog()
