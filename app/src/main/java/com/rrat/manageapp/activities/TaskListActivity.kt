@@ -2,10 +2,13 @@ package com.rrat.manageapp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.rrat.manageapp.R
+import com.rrat.manageapp.adapters.TaskListItemsAdapter
 import com.rrat.manageapp.databinding.ActivityTaskListBinding
 import com.rrat.manageapp.firebase.FireStoreClass
 import com.rrat.manageapp.models.Board
+import com.rrat.manageapp.models.Task
 import com.rrat.manageapp.utils.Constants
 
 class TaskListActivity : BaseActivity() {
@@ -50,5 +53,17 @@ class TaskListActivity : BaseActivity() {
         hideProgressDialog()
         setupActionBar(board.name)
 
+        val addTaskList = Task(resources.getString(R.string.add_list))
+        board.taskList.add(addTaskList)
+
+        binding.rvTaskList.layoutManager = LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                false)
+
+        binding.rvTaskList.setHasFixedSize(true)
+
+        val adapter = TaskListItemsAdapter(this, board.taskList)
+        binding.rvTaskList.adapter = adapter    
     }
 }
