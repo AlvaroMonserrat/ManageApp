@@ -61,6 +61,8 @@
                     android:layout_weight="1"
                     android:autofillHints="@string/hint_list_name"
                     android:hint="@string/hint_list_name"
+                    android:textColor="@color/primary_text_color"
+                    android:textColorHint="@color/secondary_text_color"
                     android:inputType="text" />
 
                 <ImageButton

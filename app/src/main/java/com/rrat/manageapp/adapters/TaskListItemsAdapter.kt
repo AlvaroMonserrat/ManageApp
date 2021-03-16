@@ -41,6 +41,21 @@ open class TaskListItemsAdapter(private val context: Context,
                 holder.itemViewTvAddTaskList.visibility = View.GONE
                 holder.itemViewLinearLayoutTaskItem.visibility = View.VISIBLE
             }
+
+            holder.itemViewTaskListTitle.text = model.title
+            holder.itemViewTvAddTaskList.setOnClickListener {
+                holder.itemViewTvAddTaskList.visibility = View.GONE
+                holder.itemViewCvAddTaskListName.visibility = View.VISIBLE
+            }
+
+            holder.imageButtonCloseListName.setOnClickListener {
+                holder.itemViewTvAddTaskList.visibility = View.VISIBLE
+                holder.itemViewCvAddTaskListName.visibility = View.GONE
+            }
+
+            holder.imageButtonDoneListName.setOnClickListener {
+                // TODO create entry in DB and display the task list
+            }
         }
     }
 
@@ -51,6 +66,10 @@ open class TaskListItemsAdapter(private val context: Context,
     private class MyViewHolder(binding: ItemTaskBinding): RecyclerView.ViewHolder(binding.root){
         val itemViewTvAddTaskList = binding.tvAddTaskList
         val itemViewLinearLayoutTaskItem = binding.llTaskItem
+        val itemViewTaskListTitle = binding.tvTaskListTitle
+        val itemViewCvAddTaskListName = binding.cvAddTaskListName
+        val imageButtonCloseListName = binding.ibCloseListName
+        val imageButtonDoneListName = binding.ibDoneListName
     }
 
     private fun Int.toDP(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()

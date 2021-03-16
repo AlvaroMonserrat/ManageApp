@@ -14,6 +14,7 @@ import com.rrat.manageapp.utils.Constants
 class TaskListActivity : BaseActivity() {
 
     lateinit var binding: ActivityTaskListBinding
+    private lateinit var mBoardDetails : Board
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,7 @@ class TaskListActivity : BaseActivity() {
 
     }
 
-    private fun setupActionBar(title: String){
+    private fun setupActionBar(){
 
         val toolBar = binding.toolbarTaskListActivity
 
@@ -42,7 +43,7 @@ class TaskListActivity : BaseActivity() {
         if(actionbar != null){
             actionbar.setDisplayHomeAsUpEnabled(true)
             actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
-            actionbar.title = title
+            actionbar.title = mBoardDetails.name
         }
 
         toolBar.setNavigationOnClickListener {  onBackPressed() }
@@ -50,8 +51,11 @@ class TaskListActivity : BaseActivity() {
     }
 
     fun boardDetails(board: Board){
+
+        mBoardDetails = board
+
         hideProgressDialog()
-        setupActionBar(board.name)
+        setupActionBar()
 
         val addTaskList = Task(resources.getString(R.string.add_list))
         board.taskList.add(addTaskList)
@@ -66,4 +70,9 @@ class TaskListActivity : BaseActivity() {
         val adapter = TaskListItemsAdapter(this, board.taskList)
         binding.rvTaskList.adapter = adapter    
     }
+
+    fun addUpdateTaskListSuccess(){
+        FireStoreClass().getBoardDetails(this, mBoardDetails.documentId)
+    }
+
 }
