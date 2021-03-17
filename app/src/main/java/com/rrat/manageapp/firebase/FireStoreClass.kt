@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.rrat.manageapp.activities.*
 import com.rrat.manageapp.models.Board
+import com.rrat.manageapp.models.Task
 import com.rrat.manageapp.models.User
 import com.rrat.manageapp.utils.Constants
 
@@ -159,6 +160,11 @@ class FireStoreClass {
                     activity.hideProgressDialog()
                     Log.e(activity.javaClass.simpleName, "Error while creating a board.", e)
                 }
+    }
+
+    fun createTaskList(taskListName: String){
+        val task = Task(taskListName, FireStoreClass().getCurrentUserId())
+        
     }
 
 }
