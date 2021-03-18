@@ -162,9 +162,5 @@ class FireStoreClass {
                 }
     }
 
-    fun createTaskList(taskListName: String){
-        val task = Task(taskListName, FireStoreClass().getCurrentUserId())
-        
-    }
 
 }
