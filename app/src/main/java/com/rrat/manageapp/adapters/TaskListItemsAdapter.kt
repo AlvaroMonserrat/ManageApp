@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rrat.manageapp.activities.TaskListActivity
 import com.rrat.manageapp.databinding.ItemBoardBinding
@@ -104,6 +105,38 @@ open class TaskListItemsAdapter(private val context: Context,
             holder.binding.ibDeleteList.setOnClickListener {
                 alertDialogForDeleteList(position, model.title)
             }
+
+            holder.binding.tvAddCard.setOnClickListener{
+                holder.binding.tvAddCard.visibility = View.GONE
+                holder.binding.cvAddCard.visibility = View.VISIBLE
+            }
+
+            holder.binding.ibCloseCardName.setOnClickListener {
+                holder.binding.tvAddCard.visibility = View.VISIBLE
+                holder.binding.cvAddCard.visibility = View.GONE
+            }
+
+            holder.binding.ibDoneCardName.setOnClickListener {
+
+                val cardName = holder.binding.etCardName.text.toString()
+
+                if(cardName.isNotEmpty()){
+                    if(context is TaskListActivity){
+                        // Todo add a card
+                        context.addCardToTaskList(position, cardName)
+                    }
+                }else{
+                    Toast.makeText(context, "Please Enter Card Name.", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+
+            holder.binding.rvCardList.layoutManager = LinearLayoutManager(context)
+            holder.binding.rvCardList.setHasFixedSize(true)
+
+            val adapter = CardListItemsAdapter(context, model.cards)
+            holder.binding.rvCardList.adapter = adapter
+
         }
 
     }
