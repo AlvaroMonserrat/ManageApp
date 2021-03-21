@@ -23,8 +23,8 @@ class SplashActivity : AppCompatActivity() {
 
         setWindowFullScreen()
 
-        val typeFace: Typeface = Typeface.createFromAsset(assets, "pricedown bl.ttf")
-        binding.textViewAppName.typeface = typeFace
+        //val typeFace: Typeface = Typeface.createFromAsset(assets, "pricedown bl.ttf")
+        //binding.textViewAppName.typeface = typeFace
 
         Handler(Looper.getMainLooper()).postDelayed({
 
