@@ -1,5 +1,6 @@
 package com.rrat.manageapp.activities
 
+import android.app.Activity
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,6 +24,9 @@ class MembersActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMembersBinding
     private lateinit var mBoardDetails: Board
+    private lateinit var mAssignedMembersList: ArrayList<User>
+
+    private var anyChangeMade: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +67,8 @@ class MembersActivity : BaseActivity() {
             val email = dialog.findViewById<TextView>(R.id.et_email_search_member).text.toString()
             if(email.isNotEmpty()){
                 dialog.dismiss()
-                // TODO implement adding member logic
+                showProgressDialog(resources.getString(R.string.please_wait))
+                FireStoreClass().getMemberDetails(this, email)
             }else{
                 Toast.makeText(this@MembersActivity,
                         "Please enter members email address",
@@ -96,12 +101,36 @@ class MembersActivity : BaseActivity() {
 
     }
 
+    fun memberDetails(user: User){
+        mBoardDetails.assignedTo.add(user.id)
+        FireStoreClass().assignMemberToBoard(this, mBoardDetails, user)
+    }
+
     fun setupMembersList(list: ArrayList<User>){
+
+        mAssignedMembersList = list
+
         hideProgressDialog()
         binding.rvMembersList.layoutManager = LinearLayoutManager(this)
         binding.rvMembersList.setHasFixedSize(true)
 
         val adapter = MembersListItemsAdapter(this, list)
         binding.rvMembersList.adapter = adapter
+    }
+
+    override fun onBackPressed() {
+        if(anyChangeMade){
+            setResult(Activity.RESULT_OK)
+        }
+        super.onBackPressed()
+    }
+
+    fun memberAssignSuccess(user: User){
+        hideProgressDialog()
+        mAssignedMembersList.add(user)
+
+        anyChangeMade = true
+
+        setupMembersList(mAssignedMembersList)
     }
 }

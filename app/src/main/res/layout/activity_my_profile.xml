@@ -102,7 +102,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/mobile"
                             android:textColor="@color/black"
-                            android:inputType="textPassword"
+                            android:inputType="text"
                             android:textSize="@dimen/et_text_size" />
                     </com.google.android.material.textfield.TextInputLayout>
 
