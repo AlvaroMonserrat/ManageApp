@@ -40,7 +40,7 @@ class TaskListActivity : BaseActivity() {
 
 
     }
-    
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -86,6 +86,14 @@ class TaskListActivity : BaseActivity() {
 
         toolBar.setNavigationOnClickListener {  onBackPressed() }
 
+    }
+
+    fun cardDetails(taskListPosition: Int, cardPosition: Int){
+        val intent = Intent(this, CardDetailsActivity::class.java)
+        intent.putExtra(Constants.BOARD_DETAIL, mBoardDetails)
+        intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
+        intent.putExtra(Constants.CARD_LIST_ITEM_POSITION, cardPosition)
+        startActivity(intent)
     }
 
     fun boardDetails(board: Board){

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rrat.manageapp.activities.TaskListActivity
 import com.rrat.manageapp.databinding.ItemBoardBinding
 import com.rrat.manageapp.databinding.ItemTaskBinding
+import com.rrat.manageapp.models.Card
 import com.rrat.manageapp.models.Task
 
 open class TaskListItemsAdapter(private val context: Context,
@@ -136,6 +137,15 @@ open class TaskListItemsAdapter(private val context: Context,
 
             val adapter = CardListItemsAdapter(context, model.cards)
             holder.binding.rvCardList.adapter = adapter
+
+            adapter.setOnClickListener(object : CardListItemsAdapter.OnClickListener{
+                override fun onClick(cardPosition: Int) {
+                    if (context is TaskListActivity){
+                        context.cardDetails(position, cardPosition)
+                    }
+                }
+
+            })
 
         }
 
