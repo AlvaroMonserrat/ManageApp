@@ -70,5 +70,6 @@
     <dimen name="card_details_update_btn_marginTop">30dp</dimen>
     <!--END-->
 
+    <dimen name="item_selected_member_image_size">45dp</dimen>
 
 </resources>

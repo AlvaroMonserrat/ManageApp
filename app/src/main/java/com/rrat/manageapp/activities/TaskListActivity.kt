@@ -15,14 +15,16 @@ import com.rrat.manageapp.firebase.FireStoreClass
 import com.rrat.manageapp.models.Board
 import com.rrat.manageapp.models.Card
 import com.rrat.manageapp.models.Task
+import com.rrat.manageapp.models.User
 import com.rrat.manageapp.utils.Constants
 
 class TaskListActivity : BaseActivity() {
 
     lateinit var binding: ActivityTaskListBinding
-    private lateinit var mBoardDetails : Board
+    private lateinit var mBoardDetails: Board
 
     private lateinit var mBoardDocumentId: String
+    private lateinit var mAssignedMemberDetailsList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,7 @@ class TaskListActivity : BaseActivity() {
 
         setContentView(binding.root)
 
-        if(intent.hasExtra(Constants.DOCUMENT_ID)){
+        if (intent.hasExtra(Constants.DOCUMENT_ID)) {
             mBoardDocumentId = intent.getStringExtra(Constants.DOCUMENT_ID).toString()
         }
 
@@ -44,13 +46,13 @@ class TaskListActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK
+        if (resultCode == Activity.RESULT_OK
                 && requestCode == MEMBERS_REQUEST_CODE
-                || requestCode == CARD_DETAILS_REQUEST_CODE){
+                || requestCode == CARD_DETAILS_REQUEST_CODE) {
 
             showProgressDialog(resources.getString(R.string.please_wait))
             FireStoreClass().getBoardDetails(this, mBoardDocumentId)
-        }else{
+        } else {
             Log.e("Cancelled", "Cancelled")
         }
     }
@@ -62,7 +64,7 @@ class TaskListActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.action_members -> {
                 val intent = Intent(this, MembersActivity::class.java)
                 // Se puede enviar usando putExtra porque mBoardDetails es Parcelable
@@ -74,32 +76,35 @@ class TaskListActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupActionBar(){
+    private fun setupActionBar() {
 
         val toolBar = binding.toolbarTaskListActivity
 
         setSupportActionBar(toolBar)
 
         val actionbar = supportActionBar
-        if(actionbar != null){
+        if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true)
             actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
             actionbar.title = mBoardDetails.name
         }
 
-        toolBar.setNavigationOnClickListener {  onBackPressed() }
+        toolBar.setNavigationOnClickListener { onBackPressed() }
 
     }
 
-    fun cardDetails(taskListPosition: Int, cardPosition: Int){
+    fun cardDetails(taskListPosition: Int, cardPosition: Int) {
         val intent = Intent(this, CardDetailsActivity::class.java)
         intent.putExtra(Constants.BOARD_DETAIL, mBoardDetails)
         intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
         intent.putExtra(Constants.CARD_LIST_ITEM_POSITION, cardPosition)
+
+        intent.putExtra(Constants.BOARD_MEMBERS_LIST, mAssignedMemberDetailsList)
+
         startActivityForResult(intent, CARD_DETAILS_REQUEST_CODE)
     }
 
-    fun boardDetails(board: Board){
+    fun boardDetails(board: Board) {
 
         mBoardDetails = board
 
@@ -117,10 +122,14 @@ class TaskListActivity : BaseActivity() {
         binding.rvTaskList.setHasFixedSize(true)
 
         val adapter = TaskListItemsAdapter(this, board.taskList)
-        binding.rvTaskList.adapter = adapter    
+        binding.rvTaskList.adapter = adapter
+
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FireStoreClass().getAssignedMembersListDetails(this, mBoardDetails.assignedTo)
+
     }
 
-    fun addUpdateTaskListSuccess(){
+    fun addUpdateTaskListSuccess() {
         hideProgressDialog()
 
         showProgressDialog(resources.getString(R.string.please_wait))
@@ -128,17 +137,17 @@ class TaskListActivity : BaseActivity() {
         FireStoreClass().getBoardDetails(this, mBoardDetails.documentId)
     }
 
-    fun createTaskList(taskListName: String){
+    fun createTaskList(taskListName: String) {
         val task = Task(taskListName, FireStoreClass().getCurrentUserId())
         mBoardDetails.taskList.add(0, task)
-        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size-1)
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
 
         showProgressDialog(resources.getString(R.string.please_wait))
 
         FireStoreClass().addUpdateTaskList(this, mBoardDetails)
     }
 
-    fun updateTaskList(position: Int, listName: String, model: Task){
+    fun updateTaskList(position: Int, listName: String, model: Task) {
         val task = Task(listName, model.createdBy)
 
         mBoardDetails.taskList[position] = task
@@ -149,7 +158,7 @@ class TaskListActivity : BaseActivity() {
         FireStoreClass().addUpdateTaskList(this, mBoardDetails)
     }
 
-    fun deleteTaskList(position: Int){
+    fun deleteTaskList(position: Int) {
         mBoardDetails.taskList.removeAt(position)
         mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
 
@@ -158,7 +167,7 @@ class TaskListActivity : BaseActivity() {
         FireStoreClass().addUpdateTaskList(this, mBoardDetails)
     }
 
-    fun addCardToTaskList(position: Int, cardName: String){
+    fun addCardToTaskList(position: Int, cardName: String) {
         mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
 
         val cardAssignedUserList: ArrayList<String> = ArrayList()
@@ -180,6 +189,12 @@ class TaskListActivity : BaseActivity() {
         showProgressDialog(resources.getString(R.string.please_wait))
         FireStoreClass().addUpdateTaskList(this, mBoardDetails)
 
+    }
+
+    fun boardMembersDetailsList(list: ArrayList<User>){
+        mAssignedMemberDetailsList = list
+
+        hideProgressDialog()
     }
 
     companion object{

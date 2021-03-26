@@ -174,7 +174,7 @@ class FireStoreClass {
                 }
     }
 
-    fun getAssignedMembersListDetails(activity: MembersActivity, assignedTo: ArrayList<String>){
+    fun getAssignedMembersListDetails(activity: Activity, assignedTo: ArrayList<String>){
         mFireStore.collection(Constants.USERS)
                 .whereIn(Constants.ID, assignedTo)
                 .get()
@@ -189,9 +189,18 @@ class FireStoreClass {
                         userList.add(user)
                     }
 
-                    activity.setupMembersList(userList)
+                    if(activity is MembersActivity){
+                        activity.setupMembersList(userList)
+                    }else if(activity is TaskListActivity){
+                        activity.boardMembersDetailsList(userList)
+                    }
+
                 }.addOnFailureListener { e->
-                    activity.hideProgressDialog()
+                    if(activity is MembersActivity){
+                        activity.hideProgressDialog()
+                    }else if(activity is TaskListActivity){
+                        activity.hideProgressDialog()
+                    }
                     Log.e(activity.javaClass.simpleName, "Error getting members.", e)
                 }
     }
