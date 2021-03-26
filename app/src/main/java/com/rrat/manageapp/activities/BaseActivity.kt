@@ -63,6 +63,13 @@ open class BaseActivity : AppCompatActivity() {
         snackBar.show()
     }
 
+    fun showMessageSnackBar(message: String){
+        val snackBar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
+        val snackBarView = snackBar.view
+        snackBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
+        snackBar.show()
+    }
+
     fun setWindowFullScreen(){
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
